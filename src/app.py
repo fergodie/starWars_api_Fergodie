@@ -77,6 +77,32 @@ def get_planetId(character_id):
         return jsonify(), 404
     
     return jsonify(planet.serialize()), 200
+
+#---------------------------------------------------------Users---------------------------------------------------------------
+
+@app.route('/user', methods=['GET'])
+def get_user():
+    all_user = User.query.all()
+    results = []
+    for user in all_user:
+        results.append(user.serialize())
+
+   
+
+    return jsonify(results), 200
+
+@app.route('/user/favorito', methods=['GET'])
+def get_userFavorito():
+    all_user = User.query.all()
+    results = []
+    for user in all_user:
+        results.append(user.serialize())
+
+   
+
+    return jsonify(results), 200
+
+
   
 
 """@app.route('/autores/<int:autor_id>/libros', methods=['POST']) # crear un libro
