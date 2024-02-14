@@ -8,7 +8,7 @@ from flask_swagger import swagger
 from flask_cors import CORS
 from utils import APIException, generate_sitemap
 from admin import setup_admin
-from models import db, User, Character, Planet # se importa toodo lo  que se cree en models
+from models import db, User, Character, Planet, Favorito # se importa toodo lo  que se cree en models
 #from models import Person
 
 app = Flask(__name__)
@@ -91,16 +91,17 @@ def get_user():
 
     return jsonify(results), 200
 
-@app.route('/user/favorito', methods=['GET'])
-def get_userFavorito():
-    all_user = User.query.all()
-    results = []
-    for user in all_user:
-        results.append(user.serialize())
 
-   
+@app.route('/user/<int:user_id>/favoritos', methods=['GET'])
+def get_user_favoritos(user_id):
+    user = User.query.get(user_id)
 
-    return jsonify(results), 200
+    if not user:
+        return jsonify({'message': 'Usuario no encontrado'}), 404
+
+    favoritos = Favorito.query.filter_by(user_id=user.id).all()
+
+    return jsonify({'favoritos': [favorito.serialize() for favorito in favoritos]})
 
 
   
