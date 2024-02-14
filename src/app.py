@@ -91,6 +91,7 @@ def get_user():
 
     return jsonify(results), 200
 
+#-------------------------------------------------------favoritos User------------------------------------------------------
 
 @app.route('/user/<int:user_id>/favoritos', methods=['GET'])
 def get_user_favoritos(user_id):
