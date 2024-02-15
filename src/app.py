@@ -70,7 +70,7 @@ def get_planet():
 
     return jsonify(results), 200
 
-@app.route('/planet/<int:planet_id>', methods=['GET']) # busca un solo autor
+@app.route('/planet/<int:planet_id>', methods=['GET']) # busca uno solo 
 def get_planetId(character_id):
     planet = Planet.query.get(character_id)
     if planet is None:
@@ -105,15 +105,82 @@ def get_user_favoritos(user_id):
     return jsonify({'favoritos': [favorito.serialize() for favorito in favoritos]})
 
 
-  
+#-------------------------------------------------Add favoritos Planet----------------------------------------------------
 
-"""@app.route('/autores/<int:autor_id>/libros', methods=['POST']) # crear un libro
-def create_libro(autor_id):
+@app.route('/user/<int:user_id>/favorito', methods=['POST'])
+def add_user_favorito(user_id):
+    user = User.query.get(user_id)
+
+    if not user:
+        return jsonify({'message': 'Usuario no encontrado'}), 404
+
+    data = request.get_json()
+
+    if 'planetId' not in data:
+        return jsonify({'message': 'El campo planetId es obligatorio'}), 200
+
+    planet_id = data['planetId']
+    planet = Planet.query.get(planet_id)
+
+    if not planet:
+        return jsonify({'message': 'Planeta no encontrado'}), 404
+
+#                        Verificar si el planeta ya es un favorito del usuario
+    
+    existing_favorito = Favorito.query.filter_by(user_id=user.id, planetId=planet.id).first()
+    if existing_favorito:
+        return jsonify({'message': 'Este planeta ya es un favorito del usuario'}), 200
+
+#                        Crear un nuevo favorito y asociarlo al usuario actual
+    
+    new_favorito = Favorito(planetId=planet.id, user_id=user.id)
+    db.session.add(new_favorito)
+    db.session.commit()
+
+    return jsonify({'message': 'Planeta añadido a favoritos correctamente'})
+
+#-------------------------------------------------Add favoritos Character----------------------------------------------------
+
+
+@app.route('/user/<int:user_id>/favorito', methods=['POST'])
+def add_user_favorito2(user_id):
+    user = User.query.get(user_id)
+
+    if not user:
+        return jsonify({'message': 'Usuario no encontrado'}), 404
+
+    data = request.get_json()
+
+    if 'characterId' not in data:
+        return jsonify({'message': 'El campo characterId es obligatorio'}), 200
+
+    character_id = data['characterId']
+    character = Character.query.get(character_id)
+
+    if not character:
+        return jsonify({'message': 'Personaje no encontrado'}), 404
+
+    #                             Verificar si el personaje ya es un favorito del usuario
+
+    existing_favorito = Favorito.query.filter_by(user_id=user.id, characterId=character.id).first()
+    if existing_favorito:
+        return jsonify({'message': 'Este personaje ya es un favorito del usuario'}), 200
+
+    #                             Crear un nuevo favorito y asociarlo al usuario actual
+    
+    new_favorito = Favorito(characterId=character.id, user_id=user.id)
+    db.session.add(new_favorito)
+    db.session.commit()
+
+    return jsonify({'message': 'Personaje añadido a favoritos correctamente'})
+
+"""@app.route('/favorito/planet/<int:planetId>', methods=['POST']) # crear un libro
+def create_planet(planetId):
     body = request.get_json()
 
     libro = Libro()
     libro.ISBN = body['ISBN'] # body.get('ISBN')
-    #se agrega todo lo que este en models/libtos los atributos
+    #se agrega todo lo que este en models/libros los atributos
     if body.get('titulo') is None:
         libro.titulo = "Sin titulo"
     else:

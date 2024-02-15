@@ -67,7 +67,7 @@ class Planet(db.Model):
             # do not serialize the password, its a security breach
         }
     
-#---------------------------------------------Favoritos-------------------------------------------------------------
+#---------------------------------------------Favorito-------------------------------------------------------------
     
 class Favorito(db.Model):
     id = db.Column(db.Integer, primary_key=True)
