@@ -174,6 +174,22 @@ def add_user_favorito2(user_id):
 
     return jsonify({'message': 'Personaje añadido a favoritos correctamente'})
 
+#-------------------------------------------------Delete Planet-------------------------------------------------------------
+
+@app.route('/favorite/planet/<int:planetId>', methods=['DELETE'])
+def delete_favorite_planet(planetId):
+    # Obtener el favorito del planeta por su id
+    favorito = Favorito.query.filter_by(planetId=planetId).first()
+
+    if not favorito:
+        return jsonify({'message': 'Planeta favorito no encontrado'}), 200
+
+    # Eliminar el favorito del planeta
+    db.session.delete(favorito)
+    db.session.commit()
+
+    return jsonify({'message': 'Planeta favorito eliminado correctamente'})
+
 """@app.route('/favorito/planet/<int:planetId>', methods=['POST']) # crear un libro
 def create_planet(planetId):
     body = request.get_json()
