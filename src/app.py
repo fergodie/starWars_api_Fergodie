@@ -107,7 +107,7 @@ def get_user_favoritos(user_id):
 
 #-------------------------------------------------Add favoritos Planet----------------------------------------------------
 
-@app.route('/user/<int:user_id>/favorito', methods=['POST'])
+@app.route('/user/<int:user_id>/favorito/planet', methods=['POST'])
 def add_user_favorito(user_id):
     user = User.query.get(user_id)
 
@@ -142,7 +142,7 @@ def add_user_favorito(user_id):
 #-------------------------------------------------Add favoritos Character----------------------------------------------------
 
 
-@app.route('/user/<int:user_id>/favorito', methods=['POST'])
+@app.route('/user/<int:user_id>/favorito/character', methods=['POST'])
 def add_user_favorito2(user_id):
     user = User.query.get(user_id)
 
@@ -189,6 +189,22 @@ def delete_favorite_planet(planetId):
     db.session.commit()
 
     return jsonify({'message': 'Planeta favorito eliminado correctamente'})
+
+#-------------------------------------------------Delete Character-------------------------------------------------------------
+
+@app.route('/favorite/character/<int:characterId>', methods=['DELETE'])
+def delete_favorite_character(characterId):
+    # Obtener el favorito del planeta por su id
+    favorito = Favorito.query.filter_by(characterId=characterId).first()
+
+    if not favorito:
+        return jsonify({'message': 'Character favorito no encontrado'}), 200
+
+    # Eliminar el favorito del planeta
+    db.session.delete(favorito)
+    db.session.commit()
+
+    return jsonify({'message': 'Character favorito eliminado correctamente'})
 
 """@app.route('/favorito/planet/<int:planetId>', methods=['POST']) # crear un libro
 def create_planet(planetId):

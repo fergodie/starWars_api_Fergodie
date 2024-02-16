@@ -13,7 +13,7 @@ class User(db.Model):
     
 
     def __repr__(self):
-        return '<User %r>' % self.username
+        return '<User %r>' % self.email # si tocas funciones no hace falta hacer migrar y upgradear todo otra vez
 
     def serialize(self):
         return {
@@ -82,7 +82,7 @@ class Favorito(db.Model):
         return {
             "id": self.id,
             "planetId": self.planetId,
-            "terrainId": self.terrainId
+            "userId": self.user_id
             
             
             # do not serialize the password, its a security breach
